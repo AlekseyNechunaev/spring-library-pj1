@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:method="DELETE" th:action="@{/book/{id}(id=${book.getId()})}" th:object="${book}">
+    <p th:text="${book.getName()}"></p>
+    <p th:text="${book.getAuthor()}"></p>
+    <p th:text="${book.getYear()}"></p>
+    <input type="submit" value="Confirm deletion"/>
+</form>
+</body>
+</html>

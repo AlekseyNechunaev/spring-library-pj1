@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<p th:text="${book.getName()}"></p>
+<p th:text="${book.getAuthor()}"></p>
+<p th:text="${book.getYear()}"></p>
+<div th:if="${book.getPersonId() == null}">
+    <p>this book is free, who should I assign it to?</p>
+    <form th:action="@{/book/appoint/{id} (id=${book.getId()})}" th:method="POST">
+        <select name="personId">
+            <option th:each="person : ${persons}" th:value="${person.getId()}" th:text="${person.getFullName()}">
+            </option>
+        </select>
+        <input type="submit" value="Appoint"/>
+    </form>
+</div>
+<div th:unless="${book.getPersonId() == null}">
+    <p th:text="'The book is now at: ' + ${owner.getFullName()}"></p>
+    <form th:action="@{/book/release/{id} (id=${book.getId()})}" th:method="DELETE">
+        <input type="submit" value="Release"/>
+    </form>
+</div>
+<br>
+<a th:href="@{/book/edit/{id}(id=${book.getId()})}">Edit book</a>
+<br>
+<a th:href="@{/book/delete/{id}(id=${book.getId()})}">Delete book</a>
+</body>
+</html>

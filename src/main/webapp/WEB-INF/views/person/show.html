@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Person</title>
+</head>
+<body>
+<p th:text="${person.getFullName()}"></p>
+<p th:text="${person.getYearOfBirth()}"></p>
+
+<div th:if="${!books.isEmpty()}" th:each="book : ${books}">
+    <a th:href="@{/book/{id}(id=${book.getId()})}"
+       th:text="${book.getName() + ', ' + book.getAuthor() + ', ' + book.getYear()}"></a>
+</div>
+<p th:unless="${!books.isEmpty()}">The man has not yet taken a single book</p>
+<br>
+<a th:href="@{/person/edit/{id}(id=${person.getId()})}">Edit person</a>
+<br>
+<a th:href="@{/person/delete/{id}(id=${person.getId()})}">Delete person</a>
+</body>
+</html>
