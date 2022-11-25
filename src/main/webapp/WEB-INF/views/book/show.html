@@ -8,7 +8,7 @@
 <p th:text="${book.getName()}"></p>
 <p th:text="${book.getAuthor()}"></p>
 <p th:text="${book.getYear()}"></p>
-<div th:if="${book.getPersonId() == null}">
+<div th:if="${book.getPerson() == null}">
     <p>this book is free, who should I assign it to?</p>
     <form th:action="@{/book/appoint/{id} (id=${book.getId()})}" th:method="POST">
         <select name="personId">
@@ -18,8 +18,9 @@
         <input type="submit" value="Appoint"/>
     </form>
 </div>
-<div th:unless="${book.getPersonId() == null}">
-    <p th:text="'The book is now at: ' + ${owner.getFullName()}"></p>
+<div th:unless="${book.getPerson() == null}">
+    <p th:style="${book.getIsExpired() ? 'color: red;' : 'color: black;'}"
+       th:text="'The book is now at: ' + ${book.getPerson().getFullName()}"></p>
     <form th:action="@{/book/release/{id} (id=${book.getId()})}" th:method="DELETE">
         <input type="submit" value="Release"/>
     </form>

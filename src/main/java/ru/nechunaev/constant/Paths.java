@@ -25,5 +25,7 @@ public final class Paths {
 
     public static final String APPOINT = "/appoint" + ID;
 
+    public static final String SEARCH = "/search";
+
 
 }

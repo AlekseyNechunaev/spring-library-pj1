@@ -8,11 +8,11 @@
 <p th:text="${person.getFullName()}"></p>
 <p th:text="${person.getYearOfBirth()}"></p>
 
-<div th:if="${!books.isEmpty()}" th:each="book : ${books}">
+<div th:if="${!person.getBooks().isEmpty()}" th:each="book : ${person.getBooks()}">
     <a th:href="@{/book/{id}(id=${book.getId()})}"
        th:text="${book.getName() + ', ' + book.getAuthor() + ', ' + book.getYear()}"></a>
 </div>
-<p th:unless="${!books.isEmpty()}">The man has not yet taken a single book</p>
+<p th:unless="${!person.getBooks().isEmpty()}">The man has not yet taken a single book</p>
 <br>
 <a th:href="@{/person/edit/{id}(id=${person.getId()})}">Edit person</a>
 <br>

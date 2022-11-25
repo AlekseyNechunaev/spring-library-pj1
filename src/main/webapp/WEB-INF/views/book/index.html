@@ -10,6 +10,6 @@
        th:text="${book.getName() + ', ' + book.getYear()}"></a>
 </div>
 <br>
-<a href="book/new">Create new Book</a>
+<a th:href="@{book/new}">Create new Book</a>
 </body>
 </html>

@@ -6,9 +6,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.nechunaev.constant.Paths;
-import ru.nechunaev.dao.BookDao;
-import ru.nechunaev.dao.PersonDao;
 import ru.nechunaev.entity.Book;
+import ru.nechunaev.service.BookService;
+import ru.nechunaev.service.PersonService;
 
 import javax.validation.Valid;
 
@@ -16,27 +16,29 @@ import javax.validation.Valid;
 @RequestMapping(Paths.BOOK)
 public class BookController {
 
-    private final BookDao bookDao;
-    private final PersonDao personDao;
+    private final BookService bookService;
+    private final PersonService personService;
 
     @Autowired
-    public BookController(BookDao bookDao, PersonDao personDao) {
-        this.bookDao = bookDao;
-        this.personDao = personDao;
+    public BookController(BookService bookService, PersonService personService) {
+        this.bookService = bookService;
+        this.personService = personService;
     }
 
+
     @GetMapping
-    public String index(Model model) {
-        model.addAttribute("books", bookDao.showAll());
+    public String index(Model model, @RequestParam(name = "page", required = false) Integer page,
+                        @RequestParam(name = "books_per_page", required = false) Integer booksPerPage,
+                        @RequestParam(name = "sort_by_year", required = false) Boolean sortByYear) {
+        model.addAttribute("books", bookService.showAll(page, booksPerPage, sortByYear));
         return "book/index";
     }
 
     @GetMapping(Paths.ID)
     public String show(@PathVariable Long id, Model model) {
-        Book book = bookDao.show(id);
+        Book book = bookService.show(id);
         model.addAttribute("book", book);
-        model.addAttribute("owner", personDao.show(book.getPersonId()));
-        model.addAttribute("persons", personDao.showAll());
+        model.addAttribute("persons", personService.showAll());
         return "book/show";
     }
 
@@ -50,13 +52,13 @@ public class BookController {
         if (bindingResult.hasErrors()) {
             return "book/new";
         }
-        bookDao.create(book);
+        bookService.save(book);
         return "redirect:/book";
     }
 
     @GetMapping(Paths.EDIT)
     public String editBook(@PathVariable Long id, Model model) {
-        model.addAttribute("book", bookDao.show(id));
+        model.addAttribute("book", bookService.show(id));
         return "book/edit";
     }
 
@@ -65,31 +67,40 @@ public class BookController {
         if (bindingResult.hasErrors()) {
             return "/book/edit";
         }
-        bookDao.update(id, book);
+        bookService.update(id, book);
         return "redirect:/book";
     }
 
     @GetMapping(Paths.DELETE)
     public String removeBook(@PathVariable Long id, Model model) {
-        model.addAttribute("book", bookDao.show(id));
+        model.addAttribute("book", bookService.show(id));
         return "book/remove";
     }
 
     @DeleteMapping(Paths.ID)
     public String delete(@PathVariable Long id) {
-        bookDao.delete(id);
+        bookService.remove(id);
         return "redirect:/book";
     }
 
     @DeleteMapping(Paths.RELEASE)
     public String release(@PathVariable Long id) {
-        bookDao.updateOwner(id, null);
+        bookService.updateOwner(id, null);
         return "redirect:/book/" + id;
     }
 
     @PostMapping(Paths.APPOINT)
     public String appoint(@PathVariable Long id, @RequestParam Long personId) {
-        bookDao.updateOwner(id, personId);
+        bookService.updateOwner(id, personId);
         return "redirect:/book/" + id;
     }
+
+    @GetMapping(Paths.SEARCH)
+    public String search(@RequestParam(required = false) String searchTitleBook, Model model) {
+        if (searchTitleBook != null) {
+            model.addAttribute("matchBooks", bookService.searchByNameContains(searchTitleBook));
+        }
+        return "book/search";
+    }
+
 }
