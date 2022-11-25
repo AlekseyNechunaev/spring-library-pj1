@@ -96,10 +96,13 @@ public class BookController {
     }
 
     @GetMapping(Paths.SEARCH)
-    public String search(@RequestParam(required = false) String searchTitleBook, Model model) {
-        if (searchTitleBook != null) {
-            model.addAttribute("matchBooks", bookService.searchByNameContains(searchTitleBook));
-        }
+    public String search() {
+        return "book/search";
+    }
+
+    @PostMapping(Paths.SEARCH)
+    public String find(@RequestParam String searchTitleBook, Model model) {
+        model.addAttribute("matchBooks", bookService.searchByNameContains(searchTitleBook));
         return "book/search";
     }
 
