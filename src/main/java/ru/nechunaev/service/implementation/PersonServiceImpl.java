@@ -52,6 +52,7 @@ public class PersonServiceImpl implements PersonService {
         Person person = personRepository.findById(id).orElseThrow(PersonNotFoundException::new);
         person.setFullName(inputPerson.getFullName());
         person.setYearOfBirth(inputPerson.getYearOfBirth());
+        personRepository.save(person);
     }
 
     @Override
